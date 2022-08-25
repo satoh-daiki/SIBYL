@@ -1,0 +1,17 @@
+#------------------------------------
+# Summary of input parameters        
+#------------------------------------
+# GPM:                               
+#------------------------------------
+#  Pasquill-Gifford steady class =  D
+#  Emission rate =      1.000 (Bq/s) 
+#  Wind velocity =      1.000 (m/s)  
+#  Stack height  =    150.000 (m)    
+#------------------------------------
+# Grid system:                       
+#------------------------------------
+#  Resolution  =          5 (m)      
+#  (ns_x_sta, ns_x_end)  = (  -200,   399)
+#  (ns_y_sta, ns_y_end)  = (  -200,   199)
+#  (ns_z_sta, ns_z_end)  = (     1,    50)
+#------------------------------------

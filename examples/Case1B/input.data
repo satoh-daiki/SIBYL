@@ -1,0 +1,23 @@
+! ##### MANDATORY PARAMETERs #####
+file         = 'RESP_H_Kr-85.bin'
+irs          =       100  ! mesh resolution (m)
+ns_x_sta     =       -10  ! start point on x axis for SOURCE REGION
+ns_x_end     =       100  ! end   point on x axis
+ns_y_sta     =      -100  ! start point on y axis
+ns_y_end     =       100  ! end   point on y axis
+ns_z_sta     =         1  ! start point on z axis
+ns_z_end     =       100  ! end   point on z axis
+nt_x_sta     =       -10  ! start point on x axis for TARGET REGION
+nt_x_end     =       100  ! end   point on x axis
+nt_y_sta     =       -20  ! start point on y axis
+nt_y_end     =        20  ! end   point on y axis
+! ##### OPTIONAL PARAMETERs #####
+nsh_max      =         1  ! maximum mesh number of SHIELD alogn z axis
+irestart     =         0  ! restart flag:  0= initial, 1= restart
+irestart_out =         0  ! output for restart: 0= no, 1= yes
+irestart_tim =         2  ! timimng of output of restart: 0= every step, 1= count of steps, 2= elapse time
+irestart_cnt =      3400  ! num of steps, seconds
+ctitle       = "OpenMP (1Process - N thread(s))"
+ndivx        =         1  ! divided number for X-axis
+ndivy        =         1  ! divided number for Y-axis
+idivtype     =         2  ! divide method for source region: 0= even, 1= elements, 2= distance, 3= area
