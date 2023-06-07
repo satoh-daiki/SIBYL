@@ -11,7 +11,7 @@
 ## Directory structure
 ![structure](https://github.com/satoh-daiki/SIBYL/assets/100466085/261cbae2-42f8-4c0d-9f9c-c2a994863ae5)
 ## Usage
-Pldase refer to the linked [PDF](https://github.com/satoh-daiki/SIBYL/blob/main/SIBYL-manual.pdf) file.
+Please refer to the linked [PDF](https://github.com/satoh-daiki/SIBYL/blob/main/SIBYL-manual.pdf) file.
 
 ## Citation
 D. Satoh, H. Nakayama, T. Furuta, T. Yoshihiro, K. Sakamoto, “Simulation code for estimating external gamma-ray doses from a radioactive plume and contaminated ground using a local-scale atmospheric dispersion model”, PLOS ONE, 2021.  
@@ -21,6 +21,6 @@ H. Nakayama, N. Onodera, D. Satoh, H. Nagai, Y. Hasegawa, Y. Idomura, “Develop
 https://doi.org/10.1080/00223131.2022.2038302
 
 ## License
-Copyright (c) 2018-2022 Japan Atomic Energy Agency
+Copyright (c) 2018-2022 Japan Atomic Energy Agency.
 
-Licensed under the [MIT](https://github.com/satoh-daiki/SIBYL/blob/main/LICENSE.md) License
+Licensed under the [MIT](https://github.com/satoh-daiki/SIBYL/blob/main/LICENSE.md) License.
