@@ -1,4 +1,5 @@
-![SIBYL_LOGO](https://github.com/satoh-daiki/SIBYL/assets/100466085/bb7b1e66-272d-47d0-aae2-58743db9eaba)
+![SIBYL_LOGO](https://github.com/satoh-daiki/SIBYL/assets/100466085/fc0d915d-2890-4f73-8cf4-11fe01027217)
+
 # SIBYL: Simulation code powered by lattice dose-response functions
 
 [SIBYL]( https://doi.org/10.1371/journal.pone.0245932) is a computer code that couples with an atmospheric dispersion model to calculate the dose distribution on the ground due to gamma rays from a radioactive plume. It can also take into account the shielding effect of gamma rays by buildings for dose assessment in uraban areas. The dose-response functions used in the calculations were evaluated using the general-purpose radiation transport code [PHITS](https://phits.jaea.go.jp/index.html). SIBYL has a graphical user interface and its input and output data can be visualized via [Paraview](https://www.paraview.org/). In addition, it is capable of parallel computing based on OpenMP and MPI technologies.
