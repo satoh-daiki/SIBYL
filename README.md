@@ -9,15 +9,15 @@
 ![Parallel-computation](https://journals.plos.org/plosone/article/figure/image?download&size=large&id=10.1371/journal.pone.0245932.g019)
 
 ## Directory structure
-![structure](https://github.com/satoh-daiki/SIBYL/assets/100466085/261cbae2-42f8-4c0d-9f9c-c2a994863ae5)
+![structure](https://github.com/user-attachments/assets/96fce556-fdbe-4e8e-8b5f-baf5bab7856c)
 ## Usage
 Please refer to the linked [PDF](https://github.com/satoh-daiki/SIBYL/blob/main/SIBYL-manual.pdf) file.
 
 ## Citation
-D. Satoh, H. Nakayama, T. Furuta, T. Yoshihiro, K. Sakamoto, “Simulation code for estimating external gamma-ray doses from a radioactive plume and contaminated ground using a local-scale atmospheric dispersion model”, PLOS ONE, 2021.  
+D. Satoh, H. Nakayama, T. Furuta, T. Yoshihiro, K. Sakamoto, "Simulation code for estimating external gamma-ray doses from a radioactive plume and contaminated ground using a local-scale atmospheric dispersion model", PLOS ONE, 2021.  
 https://doi.org/10.1371/journal.pone.0245932  
 
-H. Nakayama, N. Onodera, D. Satoh, H. Nagai, Y. Hasegawa, Y. Idomura, “Development of local-scale high-resolution atmospheric dispersion and dose assessment system”, Journal of Nuclear Science and Technology, 2021.  
+H. Nakayama, N. Onodera, D. Satoh, H. Nagai, Y. Hasegawa, Y. Idomura, "Development of local-scale high-resolution atmospheric dispersion and dose assessment system", Journal of Nuclear Science and Technology, 2021.  
 https://doi.org/10.1080/00223131.2022.2038302
 
 ## License
