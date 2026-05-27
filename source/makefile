@@ -12,7 +12,7 @@
 #        make allclean   : 
 ########################################################################
 # Flag for MPI
-USEMPI = true
+# USEMPI = true
 # USEMPI = false
 #
 # MPI model
@@ -25,14 +25,16 @@ USEOMP = true
 #
 ########################################################################
 
-PROGRAM = sibyl
+PROGRAM = SIBYL_lin.exe
 
 #
 # OPT_STD = -fpp -O2
 # OPT_STD = -fpp -O3
 # OPT_STD = -fpp -O3 -xCORE-AVX2
 # OPT_STD = -fpp -O3 -xCORE-AVX2 -no-prec-div -fp-model fast=2
-OPT_STD = -fpp -O3 -xCORE-AVX2 -no-prec-div -fp-model fast=2 -align array64byte
+# OPT_STD = -fpp -O3 -xCORE-AVX2 -no-prec-div -fp-model fast=2 -align array64byte
+# daiki (2023.12.12)
+OPT_STD = -fpp -O3 -no-prec-div -fp-model fast=2 -align array64byte -heap-arrays
 
 # OPT_DBG = -g -traceback -check all  -no-vec -no-ftz -fpe0
 # OPT_DBG = -g -traceback -check all,noarg_temp_created
@@ -74,16 +76,18 @@ rw_restart_data.o \
 rw_restart_doses.o \
 compute_doses.o \
 attenuation.o \
-output_result.o
+output_result.o \
+merging.o \
+termination.o
 
 MPI_OBJECTS = \
 mpisubs.o
 
 ########################################################################
 
-FC  = ifort
-F77 = ifort
-F90 = ifort
+FC  = ifx
+F77 = ifx
+F90 = ifx
 
 ifeq ($(strip $(USEMPI)), true)
   SIBYL_OBJECTS += $(MPI_OBJECTS)

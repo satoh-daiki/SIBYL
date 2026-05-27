@@ -18,7 +18,7 @@ subroutine input(ierr)
   parameter(MAXPARAMI = 25, MAXPARAMR = 2)
 #endif
   character(len=10) :: inputfile
-  parameter(inputfile = 'input.data')
+  parameter(inputfile = 'INPUT.data')
 ! ---------------------------------------------------------------------
   integer :: i
   integer :: iopend
@@ -65,22 +65,6 @@ subroutine input(ierr)
     kf(i)%flag = 0
   enddo 
 
-! ====================
-! MANDATORY PARAMETERs
-! ====================
-!!!  file         = 'RESP_H_Cs-137.bin'
-!!!  irs          =         1  ! mesh resolution (m)
-!!!  ns_x_sta     =      -120  ! start point on x axis for SOURCE REGION
-!!!  ns_x_end     =       119  ! end   point on x axis
-!!!  ns_y_sta     =      -120  ! start point on y axis
-!!!  ns_y_end     =       119  ! end   point on y axis
-!!!  ns_z_sta     =         0  ! start point on z axis
-!!!  ns_z_end     =        80  ! end   point on z axis
-!!!  nt_x_sta     =      -120  ! start point on x axis for TARGET REGION
-!!!  nt_x_end     =       119  ! end   point on x axis
-!!!  nt_y_sta     =      -120  ! start point on y axis
-!!!  nt_y_end     =       119  ! end   point on y axis
-
 ! =======================
 ! FIXED PARAMETER
 ! =======================
@@ -89,7 +73,7 @@ subroutine input(ierr)
 ! =======================
 ! set OPTIONAL PARAMETERs default value
 ! =======================
-  imode        =         0  ! 0:Total, 1:Ground, 2:Plume
+  imode        =         3  ! 0:Total, 1:Ground, 2:Plume, 3:Total (GUI)
   att          =  8.118d-2  ! (cm^2/g), total attenuation coefficient for concrete
   den          =  2.400d-1  ! (g/cm^3), effective density of shield mixed with air and concrete
   ctitle       = 'SIBYL: SImulation system powered BY Latticed dose-response functions'
@@ -451,6 +435,9 @@ subroutine input(ierr)
     iz_end = 0
   case(2)
     iz_sta = 1
+    iz_end = ns_z_end
+  case(3)
+    iz_sta = ns_z_sta
     iz_end = ns_z_end
   case default
     write(*,*) 'ERROR; imode =',imode

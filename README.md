@@ -21,6 +21,6 @@ H. Nakayama, N. Onodera, D. Satoh, H. Nagai, Y. Hasegawa, Y. Idomura, “Develop
 https://doi.org/10.1080/00223131.2022.2038302
 
 ## License
-Copyright (c) 2018-2022 Japan Atomic Energy Agency.
+Copyright (c) 2018-2026 Japan Atomic Energy Agency.
 
 Licensed under the [MIT](https://github.com/satoh-daiki/SIBYL/blob/main/LICENSE.md) License.

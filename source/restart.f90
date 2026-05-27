@@ -15,8 +15,6 @@ subroutine check_restart()
 ! version history, comments, ...
 ! =====================================================================
   use commondata
-!!!  use modtime
-  use ifposix
 ! ---------------------------------------------------------------------
   implicit none
 ! ---------------------------------------------------------------------
@@ -67,7 +65,6 @@ subroutine check_restart_dir(ierr)
 ! version history, comments, ...
 ! =====================================================================
   use commondata
-  use ifposix
 ! ---------------------------------------------------------------------
   implicit none
 ! ---------------------------------------------------------------------
@@ -93,33 +90,110 @@ end subroutine check_restart_dir
 
 
 ! =====================================================================
+!subroutine existence_check_restart_dir(ierr)
+! ---------------------------------------------------------------------
+! version history, comments, ...
+! =====================================================================
+!  use commondata
+!  use ifposix
+! ---------------------------------------------------------------------
+!  implicit none
+! ---------------------------------------------------------------------
+!  integer, intent(out) :: ierr
+! ---------------------------------------------------------------------
+!--  character(len=7) :: cdirname = 'RESTART'
+!  integer :: irid, ierrtmp
+! ---------------------------------------------------------------------
+!
+!  call PXFACCESS(trim(cdirname), len_trim(cdirname), 0, ierr)
+!  if (ierr .eq. 0) then
+!    call PXFOPENDIR(trim(cdirname), len_trim(cdirname), irid, ierr)
+!    if (ierr .eq. 0) then
+!      call PXFCLOSEDIR(irid, ierrtmp)
+!      return
+!    endif
+!  endif
+!
+!  return
+!end subroutine existence_check_restart_dir
+
+! =====================================================================
 subroutine existence_check_restart_dir(ierr)
 ! ---------------------------------------------------------------------
 ! version history, comments, ...
 ! =====================================================================
   use commondata
-  use ifposix
+  use iso_c_binding, only: c_ptr, c_int, c_char, c_null_char, c_associated
 ! ---------------------------------------------------------------------
   implicit none
 ! ---------------------------------------------------------------------
+
+  interface
+      function access(path, mode) bind(C, name="access")
+          import c_int, c_char
+          integer(c_int) :: access
+          character(kind=c_char), dimension(*), intent(in) :: path
+          integer(c_int), value :: mode
+      end function access
+
+      type(c_ptr) function opendir(path) bind(C, name="opendir")
+          import c_char, c_ptr
+          character(kind=c_char), dimension(*), intent(in) :: path
+      end function opendir
+
+      subroutine closedir(dirp) bind(C, name="closedir")
+          import c_ptr
+          type(c_ptr), value :: dirp
+      end subroutine closedir
+  end interface
+
+! ---------------------------------------------------------------------
   integer, intent(out) :: ierr
 ! ---------------------------------------------------------------------
-!--  character(len=7) :: cdirname = 'RESTART'
-  integer :: irid, ierrtmp
+  integer(c_int) :: ierrtmp
+  type(c_ptr) :: irid
 ! ---------------------------------------------------------------------
 
-  call PXFACCESS(trim(cdirname), len_trim(cdirname), 0, ierr)
-  if (ierr .eq. 0) then
-    call PXFOPENDIR(trim(cdirname), len_trim(cdirname), irid, ierr)
-    if (ierr .eq. 0) then
-      call PXFCLOSEDIR(irid, ierrtmp)
-      return
-    endif
-  endif
+  ierr = access(trim(cdirname)//c_null_char, 0)
+  if (ierr == 0) then
+      irid = opendir(trim(cdirname)//c_null_char)
+      if (c_associated(irid)) then
+          call closedir(irid)
+          ierr = 0
+          return
+      else
+          ierr = -1
+      end if
+  else
+      ierr = -1
+  end if
 
   return
 end subroutine existence_check_restart_dir
 
+! =====================================================================
+!subroutine create_restart_dir(ierr)
+! ---------------------------------------------------------------------
+! version history, comments, ...
+! =====================================================================
+!  use commondata
+!  use ifposix
+! ---------------------------------------------------------------------
+!  implicit none
+! ---------------------------------------------------------------------
+!  integer, intent(out) :: ierr
+! ---------------------------------------------------------------------
+!--  character(len=7) :: cdirname = 'RESTART'
+! ---------------------------------------------------------------------
+!
+!  call PXFMKDIR(trim(cdirname), len_trim(cdirname), 493, ierr)
+!
+!  if (ierr .ne. 0) then
+!    write(*,*)'error: directory create failed.'
+!  endif
+!
+!  return
+!end subroutine create_restart_dir
 
 ! =====================================================================
 subroutine create_restart_dir(ierr)
@@ -127,24 +201,57 @@ subroutine create_restart_dir(ierr)
 ! version history, comments, ...
 ! =====================================================================
   use commondata
-  use ifposix
+  use iso_c_binding, only: c_int, c_char, c_null_char
 ! ---------------------------------------------------------------------
   implicit none
 ! ---------------------------------------------------------------------
   integer, intent(out) :: ierr
 ! ---------------------------------------------------------------------
-!--  character(len=7) :: cdirname = 'RESTART'
-! ---------------------------------------------------------------------
+  interface
+      function mkdir(path, mode) bind(C, name="mkdir")
+          import c_int, c_char
+          integer(c_int) :: mkdir
+          character(kind=c_char), dimension(*), intent(in) :: path
+          integer(c_int), value :: mode
+      end function mkdir
+  end interface
 
-  call PXFMKDIR(trim(cdirname), len_trim(cdirname), 493, ierr)
+  ierr = mkdir(trim(cdirname)//c_null_char, 493)
 
   if (ierr .ne. 0) then
-    write(*,*)'error: directory create failed.'
+    write(*,*) 'error: directory create failed.'
   endif
 
   return
 end subroutine create_restart_dir
 
+! =====================================================================
+!subroutine rename_restart_dir()
+! ---------------------------------------------------------------------
+! version history, comments, ...
+! =====================================================================
+!  use commondata
+!  use ifposix
+! ---------------------------------------------------------------------
+!  implicit none
+! ---------------------------------------------------------------------
+! ---------------------------------------------------------------------
+!  integer :: ierr
+! ---------------------------------------------------------------------
+!--  character(len=7) :: cdirname = 'RESTART'
+!  character(len=150) :: cbakname
+!  integer :: idatetime(8)
+! ---------------------------------------------------------------------
+!  call DATE_AND_TIME(values = idatetime)
+!  write(cbakname,'(A,A4,I4.4,I2.2,I2.2,I2.2,I2.2,I2.2)')trim(cdirname),'.bak',idatetime(1),idatetime(2),idatetime(3),idatetime(5),idatetime(6),idatetime(7)
+!  call PXFRENAME(trim(cdirname), len_trim(cdirname), trim(cbakname), len_trim(cbakname), ierr)
+!
+!  if (ierr .ne. 0) then
+!    write(*,*)'error: directory rename failed.'
+!  endif
+!
+!  return
+!end subroutine rename_restart_dir
 
 ! =====================================================================
 subroutine rename_restart_dir()
@@ -152,28 +259,35 @@ subroutine rename_restart_dir()
 ! version history, comments, ...
 ! =====================================================================
   use commondata
-  use ifposix
+  use iso_c_binding, only: c_int, c_char, c_null_char
 ! ---------------------------------------------------------------------
   implicit none
 ! ---------------------------------------------------------------------
-! ---------------------------------------------------------------------
   integer :: ierr
 ! ---------------------------------------------------------------------
-!--  character(len=7) :: cdirname = 'RESTART'
   character(len=150) :: cbakname
   integer :: idatetime(8)
 ! ---------------------------------------------------------------------
+  interface
+      function rename(oldpath, newpath) bind(C, name="rename")
+          import c_int, c_char
+          integer(c_int) :: rename
+          character(kind=c_char), dimension(*), intent(in) :: oldpath, newpath
+      end function rename
+  end interface
+
   call DATE_AND_TIME(values = idatetime)
-  write(cbakname,'(A,A4,I4.4,I2.2,I2.2,I2.2,I2.2,I2.2)')trim(cdirname),'.bak',idatetime(1),idatetime(2),idatetime(3),idatetime(5),idatetime(6),idatetime(7)
-  call PXFRENAME(trim(cdirname), len_trim(cdirname), trim(cbakname), len_trim(cbakname), ierr)
+  write(cbakname,'(A,A4,I4.4,I2.2,I2.2,I2.2,I2.2,I2.2)') trim(cdirname), '.bak', idatetime(1), idatetime(2), idatetime(3), &
+                                                            idatetime(5), idatetime(6), idatetime(7)
+
+  ierr = rename(trim(cdirname)//c_null_char, trim(cbakname)//c_null_char)
 
   if (ierr .ne. 0) then
-    write(*,*)'error: directory rename failed.'
+    write(*,*) 'error: directory rename failed.'
   endif
 
   return
 end subroutine rename_restart_dir
-
 
 ! =====================================================================
 subroutine remove_restart_doses()

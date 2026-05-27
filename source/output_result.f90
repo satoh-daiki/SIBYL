@@ -10,7 +10,7 @@ subroutine output_result()
 ! ---------------------------------------------------------------------
 ! ---------------------------------------------------------------------
   integer :: ix, iy
-  real(8) :: xx, yy, sqirs
+  real(8) :: xx, yy, sqirs, val
   real(8) :: t1, t2
   integer :: idatetime(8)
 ! ---------------------------------------------------------------------
@@ -38,11 +38,13 @@ subroutine output_result()
 
     select case(imode)
     case(0)
-      open(unit=40,file='result.out',status='unknown')
+      open(unit=40,file='RESULT.out',status='unknown')
     case(1)
-      open(unit=40,file='result_grd.out',status='unknown')
+      open(unit=40,file='RESULT_GROUND.out',status='unknown')
     case(2)
-      open(unit=40,file='result_plu.out',status='unknown')
+      open(unit=40,file='RESULT_PLUME.out',status='unknown')
+    case(3)
+      open(unit=40,file='RESULT.out',status='unknown')
     end select
 
     write (40,'(A)') '###################################################################'
@@ -85,8 +87,9 @@ subroutine output_result()
       do iy = nc_y_sta, nc_y_end
         xx = dble(ix * irs)
         yy = dble(iy * irs)
-        write(40,'(2f9.1,es11.3)') xx, yy, (dout(ix,iy) / sqirs)
-                                           ! (uSv/h @ 1.0 x 1.0 m^2)
+        val= dout(ix,iy) / sqirs
+        if( val < 1.0d-99 ) val = 0.0d+0
+        write(40,'(2f9.1,es12.3)') xx, yy, val  ! (uSv/h @ 1.0 x 1.0 m^2)
       enddo
       write(40,'(a)') '   '
     enddo
@@ -95,6 +98,10 @@ subroutine output_result()
     write (40,'(A,I4.4,A,I2.2,A,I2.2,X,I2.2,A,I2.2,A,I2.2)') '# output done. @ ',idatetime(1),'/',idatetime(2),'/',idatetime(3),idatetime(5),':',idatetime(6),':',idatetime(7)
 
     close(40)
+
+!   Generating visualization.out (Ver.2.20)
+    call merging
+
   endif ! myrank
 
   return

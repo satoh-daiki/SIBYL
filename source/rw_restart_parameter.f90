@@ -60,7 +60,7 @@ subroutine check_restart_parameter(ierr)
     crestartpar = trim(cdirname)//'/'//trim(cfnamepar)
 
     ierrflag = 0
-    open(unit=IFDRESPAR,file=trim(crestartpar),status='old',mode='read', err=999)
+    open(unit=IFDRESPAR,file=trim(crestartpar),status='old', err=999)
     ierrflag = 1
     read(IFDRESPAR,'(A10,A)', err=999, end=999) cdummy, file_chk
     read(IFDRESPAR,'(A10,I10)', err=999, end=999) cdummy, imode_chk

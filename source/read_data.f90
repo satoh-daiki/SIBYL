@@ -26,7 +26,7 @@ subroutine read_zdata(ierr)
   ierr = 0
   if (myrank .eq. 0) then
     ierrflag = 0
-    open(unit=10,file=cfname_zda,status='old',mode='read' ,err=111)
+    open(unit=10,file=cfname_zda,status='old',err=111)
     ierrflag = 1
     read(10,*,err=111,end=111) zlow(1), zupp(1)
     if (zlow(1) .ne. 0.0d0) then
@@ -90,7 +90,7 @@ subroutine read_din(ierr)
 
   isopen_plume = 0
   if (myrank .eq. 0) then
-    open(unit=10,file=cfname_plu,iostat=istat,status='old',mode='read')
+    open(unit=10,file=cfname_plu,iostat=istat,status='old')
 
     if (istat .eq. 0) then
       ierrflag = 1
@@ -129,7 +129,7 @@ subroutine read_din(ierr)
 
   isopen_ground = 0
   if (myrank .eq. 0) then
-    open(unit=10,file=cfname_gnd,iostat=istat,status='old',mode='read')
+    open(unit=10,file=cfname_gnd,iostat=istat,status='old')
 
     if (istat .eq. 0) then
       ierrflag = 1
@@ -184,7 +184,7 @@ subroutine read_initial_data(ierr)
 
   isopen_shield = 0
   if (myrank .eq. 0) then
-    open(unit=10,file=cfname_sld,iostat=istat,status='old',mode='read')
+    open(unit=10,file=cfname_sld,iostat=istat,status='old')
 
     if (istat .eq. 0) then
       ierrflag = 1
@@ -220,7 +220,7 @@ subroutine read_initial_data(ierr)
 
   isopen_elevation = 0
   if (myrank .eq. 0) then
-    open(unit=10,file=cfname_elv,iostat=istat,status='old',mode='read')
+    open(unit=10,file=cfname_elv,iostat=istat,status='old')
 
     if (istat .eq. 0 ) then
       allocate( delev(nt_x_sta:nt_x_end,nt_y_sta:nt_y_end) )

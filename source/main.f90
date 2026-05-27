@@ -4,7 +4,7 @@ program main
 ! SIBYL:
 ! SImulation system powered BY Lattice dose-response functions
 ! for the estimation of external doses from a radioactive plume.
-! Version 2.1
+! Version 2.4
 ! ---------------------------------------------------------------------
 ! size of response matrix:
 ! mesh = 1001 x 1001 = 1002001
@@ -35,6 +35,10 @@ program main
 ! Modified  by d.satoh (2020.01.09)
 ! Confirmed by d.satoh (2022.05.16) ! SIBYL ver 2.0 (CCSE Distribution Package)
 ! Confirmed by d.satoh (2022.07.29) ! SIBYL ver 2.1
+! Modified  by d.satoh (2025.02.09) ! SIBYL Ver 2.2 (For LHADDAS-GUI)
+! Modified  by d.satoh (2025.02.13) ! SIBYL Ver 2.3 (Compiling with gfortran)
+! Modified  by d.satoh (2025.02.14) ! SIBYL Ver 2.4 (Add imode=3 for GUI calc.)
+! Modified  by d.satoh (2025.02.17) ! SIBYL Ver 2.5 (Bugfix)
 ! =====================================================================
 !$ use omp_lib
 ! ---------------------------------------------------------------------
@@ -58,7 +62,7 @@ program main
 #endif
 ! ---------------------------------------------------------------------
 ! START OF SIMULATION
-  call INIT_TIMER()                                      !@ modtime.f90
+  call INIT_TIMER()                                        !@ modtime.f90
   if (myrank .eq. 0) then
     write (*,'(A)') '###################################################################'
     write (*,'(A)') '# SIBYL:                                                          #'
@@ -69,7 +73,7 @@ program main
   endif
 ! ---------------------------------------------------------------------
   call input(ierr)                                         !@ input.f90
-  call check_abort(ierr)                               !@ othersubs.f90
+  call check_abort(ierr)                                   !@ othersubs.f90
 ! ---------------------------------------------------------------------
 
 ! PRINT ENVIRONMENT
@@ -140,76 +144,76 @@ program main
 
 ! ---------------------------------------------------------------------
 ! RESTART check
-  call check_restart()                                   !@ restart.f90
+  call check_restart()                                     !@ restart.f90
 ! ---------------------------------------------------------------------
-  call allocate_arrays_1st()                     !@ allocate_arrays.f90
+  call allocate_arrays_1st()                               !@ allocate_arrays.f90
   if (irestart .eq. 0) then
     if (irestart_out .eq. 1) then
-      call check_restart_dir(ierr)                       !@ restart.f90
-      call check_abort(ierr)                           !@ othersubs.f90
+      call check_restart_dir(ierr)                         !@ restart.f90
+      call check_abort(ierr)                               !@ othersubs.f90
     endif
-    call read_din(ierr)                                !@ read_data.f90
-    call check_abort(ierr)                             !@ othersubs.f90
+    call read_din(ierr)                                    !@ read_data.f90
+    call check_abort(ierr)                                 !@ othersubs.f90
 #ifdef USE_MPI_SPMD
-    call calc_index()                                    !@ mpisubs.f90
+    call calc_index()                                      !@ mpisubs.f90
     if (irestart_out .eq. 1) then
-      call write_partition()                             !@ mpisubs.f90
+      call write_partition()                               !@ mpisubs.f90
     endif
   else
-    call read_partition(ierr)                            !@ mpisubs.f90
-    call check_abort(ierr)                             !@ othersubs.f90
+    call read_partition(ierr)                              !@ mpisubs.f90
+    call check_abort(ierr)                                 !@ othersubs.f90
 #endif
   endif ! if (irestart)
-  call set_index()                                     !@ othersubs.f90
+  call set_index()                                         !@ othersubs.f90
 ! ---------------------------------------------------------------------
-  call allocate_arrays()                         !@ allocate_arrays.f90
+  call allocate_arrays()                                   !@ allocate_arrays.f90
 ! ---------------------------------------------------------------------
-  call read_zdata(ierr)                                !@ read_data.f90
-  call check_abort(ierr)                               !@ othersubs.f90
+  call read_zdata(ierr)                                    !@ read_data.f90
+  call check_abort(ierr)                                   !@ othersubs.f90
 ! ---------------------------------------------------------------------
   if (irestart .eq. 0) then
     ! -----------------------------------------------------------------
-    call read_initial_data(ierr)                       !@ read_data.f90
-    call check_abort(ierr)                             !@ othersubs.f90
+    call read_initial_data(ierr)                           !@ read_data.f90
+    call check_abort(ierr)                                 !@ othersubs.f90
 #ifdef USE_MPI
-    call distribute_initial_data(ierr)                   !@ mpisubs.f90
-    call check_abort(ierr)                             !@ othersubs.f90
+    call distribute_initial_data(ierr)                     !@ mpisubs.f90
+    call check_abort(ierr)                                 !@ othersubs.f90
 #endif
-    call calculate_initial_data()                      !@ read_data.f90
+    call calculate_initial_data()                          !@ read_data.f90
     ! -----------------------------------------------------------------
-    call response()                                     !@ response.f90
+    call response()                                        !@ response.f90
     ! -----------------------------------------------------------------
     if (irestart_out .eq. 1) then
-      call write_restart_parameter()        !@ rw_restart_parameter.f90
-      call write_restart_data()                  !@ rw_restart_data.f90
-      call open_restart_doses_initial(irestart_y, ierr) !@ rw_restart_doses.f90
-      call check_abort(ierr)                           !@ othersubs.f90
+      call write_restart_parameter()                       !@ rw_restart_parameter.f90
+      call write_restart_data()                            !@ rw_restart_data.f90
+      call open_restart_doses_initial(irestart_y, ierr)    !@ rw_restart_doses.f90
+      call check_abort(ierr)                               !@ othersubs.f90
     else
 !--      irestart_y = nt_y_sta
       irestart_y = nc_y_sta
     endif
   else
     ! -----------------------------------------------------------------
-    call read_restart_data(ierr)                 !@ rw_restart_data.f90
-    call check_abort(ierr)                             !@ othersubs.f90
+    call read_restart_data(ierr)                           !@ rw_restart_data.f90
+    call check_abort(ierr)                                 !@ othersubs.f90
 #ifdef USE_MPI_MS
-    call distribute_restart_data(ierr)                   !@ mpisubs.f90
-    call check_abort(ierr)                             !@ othersubs.f90
+    call distribute_restart_data(ierr)                     !@ mpisubs.f90
+    call check_abort(ierr)                                 !@ othersubs.f90
 #endif
-    call open_restart_doses_restart(irestart_y, ierr) !@ rw_restart_doses.f90
-    call check_abort(ierr)                             !@ othersubs.f90
+    call open_restart_doses_restart(irestart_y, ierr)      !@ rw_restart_doses.f90
+    call check_abort(ierr)                                 !@ othersubs.f90
     ! -----------------------------------------------------------------
   endif
 ! ---------------------------------------------------------------------
-  call compute_doses(irestart_y)                   !@ compute_doses.f90
+  call compute_doses(irestart_y)                           !@ compute_doses.f90
 ! ---------------------------------------------------------------------
   if (irestart_out .eq. 1) then
-    call close_restart_doses()                  !@ rw_restart_doses.f90
+    call close_restart_doses()                             !@ rw_restart_doses.f90
   endif
 ! ---------------------------------------------------------------------
-  call output_result()                             !@ output_result.f90
+  call output_result()                                     !@ output_result.f90
 ! ---------------------------------------------------------------------
-  call deallocate_arrays()                       !@ allocate_arrays.f90
+  call deallocate_arrays()                                 !@ allocate_arrays.f90
 ! ---------------------------------------------------------------------
 #ifdef USE_MPI
   call MPI_Barrier(MPI_COMM_WORLD, ierr)
@@ -222,6 +226,10 @@ program main
     call DATE_AND_TIME(values = idatetime)
     write (*,'(A,I4.4,A,I2.2,A,I2.2,X,I2.2,A,I2.2,A,I2.2,A)') '##### ',idatetime(1),'/',idatetime(2),'/',idatetime(3),idatetime(5),':',idatetime(6),':',idatetime(7),' #########################################'
   endif
-
-  call termination
+! ---------------------------------------------------------------------
+! Ver.2.40
+  if( imode /= 3 ) then
+    call termination
+  end if
+! ---------------------------------------------------------------------
 end program main

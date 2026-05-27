@@ -47,7 +47,7 @@ subroutine response()
 ! ---------------------------------------------------------------------
       if( iz == 0 ) then
 
-        open(unit=100,file='./RESP/000m/'//trim(file),form='unformatted',access='stream',status='old',mode='read')
+        open(unit=100,file='./RESP/000m/'//trim(file),form='unformatted',access='stream',status='old')
 
         read(100) resp0(1:nx0,1:ny0)  ! (mSv/h per kBq/m^2 @ 1.0m x 1.0 m)
 
@@ -56,7 +56,7 @@ subroutine response()
 ! ---------------------------------------------------------------------
       else if( zz < ALT(1) ) then
 
-        open(unit=100,file='./RESP/'//trim(PATH(1))//'/'//trim(file),form='unformatted',access='stream',status='old',mode='read')
+        open(unit=100,file='./RESP/'//trim(PATH(1))//'/'//trim(file),form='unformatted',access='stream',status='old')
 
         read(100) resp0(1:nx0,1:ny0)  ! (mSv/h per kBq/m^3 @ 1.0m x 1.0 m)
 
@@ -73,7 +73,7 @@ subroutine response()
         LOOP_ALT : do ialt = 1, nalt-1
 ! ---------------------------------------------------------------------
           if( zz == ALT(ialt) ) then
-            open(unit=100,file='./RESP/'//trim(PATH(ialt))//'/'//trim(file),form='unformatted',access='stream',status='old',mode='read')
+            open(unit=100,file='./RESP/'//trim(PATH(ialt))//'/'//trim(file),form='unformatted',access='stream',status='old')
 
             read(100) resp0(1:nx0,1:ny0)  ! (mSv/h per kBq/m^3 @ 1.0m x 1.0 m)
 
@@ -82,8 +82,8 @@ subroutine response()
             exit
           else if( zz > ALT(ialt) .and. zz < ALT(ialt+1) ) then
 
-            open(unit=200,file='./RESP/'//trim(PATH(ialt))//'/'//trim(file),form='unformatted',access='stream',status='old',mode='read')
-            open(unit=300,file='./RESP/'//trim(PATH(ialt+1))//'/'//trim(file),form='unformatted',access='stream',status='old',mode='read')
+            open(unit=200,file='./RESP/'//trim(PATH(ialt))//'/'//trim(file),form='unformatted',access='stream',status='old')
+            open(unit=300,file='./RESP/'//trim(PATH(ialt+1))//'/'//trim(file),form='unformatted',access='stream',status='old')
 
             read(200) resp1(1:nx0,1:ny0)  ! (mSv/h per kBq/m^3 @ 1.0m x 1.0 m)
             read(300) resp2(1:nx0,1:ny0)  ! (mSv/h per kBq/m^3 @ 1.0m x 1.0 m)
